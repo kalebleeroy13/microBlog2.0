@@ -148,7 +148,7 @@ class User(UserMixin, db.Model):
         try:
             id = jwt.decode(token, current_app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
-        except Exception:
+        except jwt.PyJWTError:
             return
         return db.session.get(User, id)
 

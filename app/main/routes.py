@@ -147,7 +147,9 @@ def unfollow(username):
 @bp.route('/translate', methods=['POST'])
 @login_required
 def translate_text():
-    data = request.get_json()
+    data = request.get_json() or {}
+    if 'text' not in data or 'source_language' not in data or 'dest_language' not in data:
+        return {'error': _('Missing required fields.')}, 400
     return {'text': translate(data['text'],
                               data['source_language'],
                               data['dest_language'])}

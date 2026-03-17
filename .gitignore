@@ -41,3 +41,11 @@ env/
 # System-specific files
 .DS_Store
 Thumbs.db
+
+# Database
+*.db
+
+# Certificates
+*.crt
+*.key
+*.pem
