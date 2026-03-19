@@ -12,10 +12,10 @@ def translate(text, source_language, dest_language):
         'Ocp-Apim-Subscription-Region': current_app.config['MS_TRANSLATOR_REGION']
     }
     r = requests.post(
-        'https://api.cognitive.microsofttranslator.com'
-        '/translate?api-version=3.0&from={}&to={}'.format(
-            source_language, dest_language), headers=auth, json=[
-                {'Text': text}])
+        'https://api.cognitive.microsofttranslator.com/translate',
+        params={'api-version': '3.0', 'from': source_language, 'to': dest_language},
+        headers=auth,
+        json=[{'Text': text}])
     if r.status_code != 200:
         return _('Error: the translation service failed.')
     return r.json()[0]['translations'][0]['text']
