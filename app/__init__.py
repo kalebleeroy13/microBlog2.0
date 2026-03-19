@@ -30,6 +30,18 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    if not app.config.get('SECRET_KEY'):
+        import warnings
+        warnings.warn(
+            'SECRET_KEY is not set. Sessions and tokens are insecure. '
+            'Set the SECRET_KEY environment variable before running in production.',
+            stacklevel=2
+        )
+        raise RuntimeError(
+            'SECRET_KEY environment variable is not set. '
+            'The application cannot start without it.'
+        )
+
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
