@@ -1,8 +1,17 @@
 import os
 from flask import Blueprint
 import click
+from app import db
+from app.models import Post
 
 bp = Blueprint('cli', __name__, cli_group=None)
+
+
+@bp.cli.command()
+def reindex():
+    """Reindex all posts in Elasticsearch."""
+    Post.reindex()
+    click.echo('Reindexed all posts.')
 
 
 @bp.cli.group()
