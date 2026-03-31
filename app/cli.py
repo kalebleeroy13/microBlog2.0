@@ -1,7 +1,7 @@
 import os
+import subprocess
 from flask import Blueprint
 import click
-from app import db
 from app.models import Post
 
 bp = Blueprint('cli', __name__, cli_group=None)
@@ -24,26 +24,20 @@ def translate():
 @click.argument('lang')
 def init(lang):
     """Initialize a new language."""
-    if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
-        raise RuntimeError('extract command failed')
-    if os.system(
-            'pybabel init -i messages.pot -d app/translations -l ' + lang):
-        raise RuntimeError('init command failed')
+    subprocess.run(['pybabel', 'extract', '-F', 'babel.cfg', '-k', '_l', '-o', 'messages.pot', '.'], check=True)
+    subprocess.run(['pybabel', 'init', '-i', 'messages.pot', '-d', 'app/translations', '-l', lang], check=True)
     os.remove('messages.pot')
 
 
 @translate.command()
 def update():
     """Update all languages."""
-    if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
-        raise RuntimeError('extract command failed')
-    if os.system('pybabel update -i messages.pot -d app/translations'):
-        raise RuntimeError('update command failed')
+    subprocess.run(['pybabel', 'extract', '-F', 'babel.cfg', '-k', '_l', '-o', 'messages.pot', '.'], check=True)
+    subprocess.run(['pybabel', 'update', '-i', 'messages.pot', '-d', 'app/translations'], check=True)
     os.remove('messages.pot')
 
 
 @translate.command()
 def compile():
     """Compile all languages."""
-    if os.system('pybabel compile -d app/translations'):
-        raise RuntimeError('compile command failed')
+    subprocess.run(['pybabel', 'compile', '-d', 'app/translations'], check=True)
